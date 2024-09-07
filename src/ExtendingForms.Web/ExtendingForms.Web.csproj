@@ -9,6 +9,7 @@
     <PackageReference Include="Bergmania.OpenStreetMap" Version="5.3.2" />
     <PackageReference Include="Umbraco.Cms" Version="13.4.1" />
     <PackageReference Include="Umbraco.Forms" Version="13.2.1" />
+    <PackageReference Include="uSync" Version="13.2.5" />
   </ItemGroup>
 
   <ItemGroup>
