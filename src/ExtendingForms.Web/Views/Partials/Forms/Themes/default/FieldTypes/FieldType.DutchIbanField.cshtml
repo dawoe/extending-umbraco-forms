@@ -1,0 +1,12 @@
+﻿@using Umbraco.Forms.Web
+@model Umbraco.Forms.Web.Models.FieldViewModel
+
+
+<input type="text" pattern="NL[0-9]{2}[A-Z]{4}[0-9]{10}"  autocomplete="off"
+       name="@Model.Name" id="@Model.Id" data-umb="@Model.Id" class="text @Html.GetFormFieldClass(Model.FieldTypeName)" value="@Model.ValueAsHtmlString" 
+       placeholder="@Model.PlaceholderText"
+       data-val-regex="Not a valid IBAN Number" data-val-regex-pattern="NL[0-9]{2}[A-Z]{4}[0-9]{10}"
+       @{if (Model.Mandatory ) { <text> data-val="true" </text>  }}
+       @{if (Model.Mandatory) { <text> data-val-required="@Model.RequiredErrorMessage" aria-required="true" </text>  }}
+       @{if (!string.IsNullOrEmpty(Model.ToolTip)) { <text> aria-describedby="@(Model.Id)_description" </text> } }
+       />

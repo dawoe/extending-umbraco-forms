@@ -36,7 +36,7 @@ namespace ExtendingForms.Web.NotificationHandlers
 
 			if (string.IsNullOrWhiteSpace(ibanValue))
 			{
-				notification.ModelState.AddModelError(ibanField.Id.ToString(), "IBAN is a required field");
+				return;
 			}
 
 			var result = this.ibanValidator.Validate(ibanValue);
