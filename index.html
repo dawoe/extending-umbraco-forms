@@ -131,6 +131,94 @@
 					</code>
 				</pre>
 			</section>
+
+			<section data-auto-animate data-auto-animate-restart>
+				<h2>Default fields & workflows</h2>
+				<p>Out of the box when creating a new form a consent field e-mail workflow are added, but this can be changed</p>				
+			</section>
+
+			<section data-auto-animate>
+				<h2>Default fields & workflows</h2>
+				<p>For fields replace the implementation of the <a href="https://docs.umbraco.com/umbraco-forms/v/13.forms.latest-lts/developer/extending/customize-default-workflows#example-providing-a-custom-apply-fields-behavior">IApplyDefaultFieldsBehavior</a> inteface</p>								
+			</section>
+
+			<section data-auto-animate>
+				<h2>Default fields & workflows</h2>
+				<p>For workflows replace the implementation of the <a href="https://docs.umbraco.com/umbraco-forms/v/13.forms.latest-lts/developer/extending/customize-default-workflows#example-providing-a-custom-apply-workflows-behavior">IApplyDefaultWorkflowsBehavior</a> inteface</p>								
+			</section>
+
+			<section data-auto-animate>
+				<h2>Default fields & workflows</h2>
+				<pre>
+					<code  data-line-numbers="1-2|14-15|16-22|24-28|30-39|42-44" data-trim data-noescape class="language-csharp">
+public class ApplyDefaultFieldsBehavior : IApplyDefaultFieldsBehavior
+{
+    private readonly FormDesignSettings _formDesignSettings;
+    private readonly FieldCollection _fieldCollection;
+
+    public ApplyDefaultFieldsBehavior(
+        IOptions<FormDesignSettings> formDesignSettings,
+        FieldCollection fieldCollection)
+    {
+        this._formDesignSettings = formDesignSettings.Value;
+        this._fieldCollection = fieldCollection;
+    }
+
+    public void ApplyDefaultFields(FormDesign form)
+    {
+        Page page = new Page();
+        form.Pages.Add(page);
+        FieldSet fieldSet = new FieldSet()
+        {
+            Id = Guid.NewGuid()
+        };
+        page.FieldSets.Add(fieldSet);
+
+        FieldsetContainer container = new FieldsetContainer()
+        {
+            Width = 12
+        };
+        fieldSet.Containers.Add(container);
+
+        var firstNameField = new Field
+        {
+            Alias = "firstName",
+            Id = Guid.NewGuid(),
+            FieldTypeId = Guid.Parse(Umbraco.Forms.Core.Constants.FieldTypes.Textfield),
+            Mandatory = true,
+            Caption = "First name"
+        };
+
+        container.Fields.Add(firstNameField);
+
+
+        if (this._formDesignSettings.DisableAutomaticAdditionOfDataConsentField)
+            return;
+        container.AddDataConsentField(this._formDesignSettings, this._fieldCollection);
+    }
+}
+					</code>
+				</pre>								
+			</section>
+
+			<section data-auto-animate>
+				<h2>Default fields & workflows</h2>
+				<pre>
+					<code  data-line-numbers="" data-trim data-noescape class="language-csharp">
+						<script type="text/template">
+							public class DefaultBehaviorComposer : IComposer
+							{
+								public void Compose(IUmbracoBuilder builder)
+								{
+									builder.Services.AddUnique<IApplyDefaultFieldsBehavior, ApplyDefaultFieldsBehavior>();
+								}
+							}
+						</script>
+					</code>
+				</pre>								
+			</section>
+
+			<section data-background-video="/video/default-fields.mp4" data-background-size="contain" class="full-screen-slide"></section>
 		</div>
 	</div>
 
