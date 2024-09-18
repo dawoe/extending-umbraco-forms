@@ -134,17 +134,17 @@
 
 			<section data-auto-animate data-auto-animate-restart>
 				<h2>Default fields & workflows</h2>
-				<p>Out of the box when creating a new form a consent field e-mail workflow are added, but this can be changed</p>				
+				<p>Out of the box when creating a new form a consent field and a e-mail workflow are added, <br>but this can be changed</p>				
 			</section>
 
 			<section data-auto-animate>
 				<h2>Default fields & workflows</h2>
-				<p>For fields replace the implementation of the <a href="https://docs.umbraco.com/umbraco-forms/v/13.forms.latest-lts/developer/extending/customize-default-workflows#example-providing-a-custom-apply-fields-behavior">IApplyDefaultFieldsBehavior</a> inteface</p>								
+				<p>For fields replace the implementation of the <a href="https://docs.umbraco.com/umbraco-forms/v/13.forms.latest-lts/developer/extending/customize-default-workflows#example-providing-a-custom-apply-fields-behavior">IApplyDefaultFieldsBehavior</a> interface</p>								
 			</section>
 
 			<section data-auto-animate>
 				<h2>Default fields & workflows</h2>
-				<p>For workflows replace the implementation of the <a href="https://docs.umbraco.com/umbraco-forms/v/13.forms.latest-lts/developer/extending/customize-default-workflows#example-providing-a-custom-apply-workflows-behavior">IApplyDefaultWorkflowsBehavior</a> inteface</p>								
+				<p>For workflows replace the implementation of the <a href="https://docs.umbraco.com/umbraco-forms/v/13.forms.latest-lts/developer/extending/customize-default-workflows#example-providing-a-custom-apply-workflows-behavior">IApplyDefaultWorkflowsBehavior</a> interface</p>								
 			</section>
 
 			<section data-auto-animate>
@@ -219,6 +219,53 @@ public class ApplyDefaultFieldsBehavior : IApplyDefaultFieldsBehavior
 			</section>
 
 			<section data-background-video="/video/default-fields.mp4" data-background-size="contain" class="full-screen-slide"></section>
+
+			<section data-auto-animate>
+				<h2>Provider types</h2>
+				<p>Out of the box all provider based types are  available <br>
+					(fields, workflows, etc..) </p>
+			</section>
+
+			<section data-auto-animate>
+				<h2>Provider types</h2>
+				<img class="r-stretch" src="/img/workflows-before.png" />				
+			</section>
+
+			<section>
+				<h2>Provider types</h2>
+				<p>Remove the ones you don't need</p>
+			</section>
+
+			<section data-auto-animate>
+				<h2>Provider types</h2>
+				<pre>
+					<code  data-line-numbers="" data-trim data-noescape class="language-csharp">
+						<script type="text/template">
+public class ExcludeWorkflowTypesComposer : IComposer
+{
+	public void Compose(IUmbracoBuilder builder)
+	{
+		builder.FormsWorkflows()
+			.Exclude<Slack>()
+			.Exclude<SlackV2>()
+			.Exclude<SendXsltEmail>()
+			.Exclude<SaveAsUmbracoNode>()
+			.Exclude<SaveAsFile>()
+			.Exclude<PostAsXml>()
+			.Exclude<PostToUrl>()
+			.Exclude<SendEmail>();
+	}
+}
+						</script>
+					</code>
+				</pre>								
+			</section>
+
+			<section data-auto-animate>
+				<h2>Provider types</h2>
+				<img class="r-stretch" src="/img/workflows-after.png" />				
+			</section>
+
 		</div>
 	</div>
 
