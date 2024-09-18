@@ -56,6 +56,37 @@
 			<section class="full-screen-slide" data-background-color="#e33f00">
 				<h1 class="r-fit-text">Configure<br> default behavior</h1>
 			</section>
+
+			<section data-auto-animate>
+				<h2>Form settings</h2>
+				<p>Configure default values for design and behavoir <a href="https://docs.umbraco.com/umbraco-forms/v/13.forms.latest-lts/developer/configuration#form-design-configuration"> settings</a></p>
+				
+			</section>
+
+			<section data-auto-animate>
+				<h2>Form settings</h2>
+				<pre>
+					<code data-trim data-noescape class="language-json">
+						"Umbraco": {
+							"Forms": {
+								"FormDesign": {
+									"MaxNumberOfColumnsInFormGroup": 12,
+									"DefaultTheme": "default",
+									"Defaults": {
+										"DisableStylesheet": true,
+										"AutocompleteAttribute": "off",
+										"Indicator": "*",
+										"MarkFieldsIndicator": "MarkMandatoryFields",
+										"DaysToRetainApprovedRecordsFor": 90,
+										"DaysToRetainRejectedRecordsFor": 90,
+										"DaysToRetainSubmittedRecordsFor": 90
+									}									
+								}								
+							}
+						}
+					</code>
+				</pre>
+			</section>
 		</div>
 	</div>
 
