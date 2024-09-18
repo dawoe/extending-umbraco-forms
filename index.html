@@ -329,7 +329,96 @@ public class AddValidationPatternsComposer : IComposer
 				<h2>Custom validation patterns</h2>				
 				<img class="r-stretch" src="/img/validation-after.png" />
 			</section>
-		</div>
+
+			<section data-auto-animate data-auto-animate-restart>
+				<h2>Additional validation</h2>
+				<p>In many cases mandatory and pattern validation is not sufficient</p>
+				<p class="fragment">The IBAN pattern validation will allow invalid numbers. </p>
+				<p class="fragment">At least a checksum validation is needed.</p>
+			</section>
+
+			<section data-auto-animate>
+				<h2>Additional validation</h2>
+				<p>Umbraco Forms publishes a <a href="https://docs.umbraco.com/umbraco-forms/v/13.forms.latest-lts/developer/extending/adding-an-event-handler#form-validation-notification">FormValidateNotification</a>
+					before a form submission is being saved.
+				</p>
+			</section>
+			
+			<section data-auto-animate>
+				<h2>Additional validation</h2>
+				<pre>
+					<code  data-line-numbers="1-2|10-11|17-21|23-29|31-46" data-trim data-noescape class="language-csharp">
+						<script type="text/template">
+							public class IbanFormValidationHandler : INotificationHandler<FormValidateNotification>
+								{
+									private readonly IIbanValidator ibanValidator;
+								
+									public IbanFormValidationHandler(IIbanValidator ibanValidator)
+									{
+										this.ibanValidator = ibanValidator;
+									}
+								
+									public void Handle(FormValidateNotification notification)
+									{
+										if (notification.ModelState.IsValid == false)
+										{
+											return;
+										}
+								
+										// check if it is the form we want to validate
+										if (notification.Form.Id.ToString().InvariantEquals("19e1b89c-17b5-4a39-a691-6da11d04e18d") == false)
+										{
+											return;
+										}
+								
+										// check if the iban field is present on the form
+										var ibanField = notification.Form.AllFields.FirstOrDefault(x => x.Alias.ToLowerInvariant() == "iban");
+								
+										if (ibanField == null)
+										{
+											return;
+										}
+										
+										// get value from the request
+										var ibanValue = notification.Context.Request.Form[ibanField.Id.ToString()].ToString();
+								
+										if (string.IsNullOrWhiteSpace(ibanValue))
+										{
+											return;
+										}
+								
+										var result = this.ibanValidator.Validate(ibanValue);
+								
+										if (result.IsValid)
+										{
+											return;
+										}
+								
+										notification.ModelState.AddModelError(ibanField.Id.ToString(), "IBAN is not valid");
+									}
+								}
+						</script>
+					</code>
+				</pre>								
+			</section>
+
+			<section data-auto-animate>
+				<h2>Additional validation</h2>
+				<pre>
+					<code  data-line-numbers="" data-trim data-noescape class="language-csharp">
+						<script type="text/template">
+							public class FormValidationComposer : IComposer
+							{
+								public void Compose(IUmbracoBuilder builder)
+								{
+									builder.AddNotificationHandler<FormValidateNotification, IbanFormValidationHandler>();
+								}
+							}
+						</script>
+					</code>
+				</pre>								
+			</section>
+
 	</div>
 
 	<div id="tl-logo" class="hide-logo">
