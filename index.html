@@ -231,7 +231,7 @@ public class ApplyDefaultFieldsBehavior : IApplyDefaultFieldsBehavior
 				<img class="r-stretch" src="/img/workflows-before.png" />				
 			</section>
 
-			<section>
+			<section data-auto-animate>
 				<h2>Provider types</h2>
 				<p>Remove the ones you don't need</p>
 			</section>
@@ -266,6 +266,69 @@ public class ExcludeWorkflowTypesComposer : IComposer
 				<img class="r-stretch" src="/img/workflows-after.png" />				
 			</section>
 
+			<section class="full-screen-slide" data-background-color="#db0967">
+				<h1 class="r-fit-text">Form validation</h1>
+			</section>
+
+			<section data-auto-animate>
+				<h2>Form validation</h2>
+				<p>Fields can be marked as mandatory</p>
+				<p class="fragment">A regular expression can be applied for format validation</p>
+				<p class="fragment">Validation happens client and server side.</p>				
+			</section>
+			<section data-auto-animate>
+				<h2>Form validation</h2>
+				<p>Regular expression can be selected from a predefined list or entered manually</p>
+				<img class="r-stretch" src="/img/validation-before.png" />
+			</section>
+
+			<section data-auto-animate data-auto-animate-restart="">
+				<h2>Custom validation patterns</h2>
+				<p>The predefined list can be extended with additional <a href="https://docs.umbraco.com/umbraco-forms/v/13.forms.latest-lts/developer/extending/adding-a-validation-pattern">validation patterns</a>
+				by registering a class that implements the IValidationPattern interface</p>							
+			</section>
+
+			<section data-auto-animate>
+				<h2>Custom validation patterns</h2>
+				<pre>
+					<code  data-line-numbers="" data-trim data-noescape class="language-csharp">
+						<script type="text/template">
+							public class DutchIbanPattern : IValidationPattern
+							{
+								public string Alias => "dutchIbanPattern";
+								// as an alternative to providing a name, a translation key can be provided.
+								// This will be used to look-up the name in the correct language for the backoffice user.
+								public string LabelKey => string.Empty;
+								public string Name => "Dutch IBAN Number";
+								public string Pattern => "^NL[0-9]{2}[A-Z]{4}[0-9]{10}$";
+								public bool ReadOnly => true;
+							}
+						</script>
+					</code>
+				</pre>								
+			</section>
+
+			<section data-auto-animate>
+				<h2>Custom validation patterns</h2>
+				<pre>
+					<code  data-line-numbers="" data-trim data-noescape class="language-csharp">
+						<script type="text/template">
+public class AddValidationPatternsComposer : IComposer
+{
+	public void Compose(IUmbracoBuilder builder)
+	{
+		builder.FormsValidationPatterns().Append<DutchIbanPattern>();
+	}
+}
+						</script>
+					</code>
+				</pre>								
+			</section>
+
+			<section data-auto-animate>
+				<h2>Custom validation patterns</h2>				
+				<img class="r-stretch" src="/img/validation-after.png" />
+			</section>
 		</div>
 	</div>
 
