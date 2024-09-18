@@ -59,7 +59,7 @@
 		</div>
 	</div>
 
-	<div id="tl-logo">
+	<div id="tl-logo" class="hide-logo">
 		<a href="https://www.truelime.nl/">
 			<img src="img/logo.svg" width="200" />
 		</a>
@@ -70,7 +70,7 @@
 	<script src="plugin/notes/notes.js"></script>
 	<script src="plugin/markdown/markdown.js"></script>
 	<script src="plugin/highlight/highlight.js"></script>
-	<script src="plugin/highlight/cshtml-razor.min.js"></script>
+	<!-- <script src="plugin/highlight/cshtml-razor.min.js"></script> -->
 	<script src="plugin/zoom/zoom.js"></script>
 	<script>
 		// More info about initialization & config:
@@ -84,6 +84,17 @@
 			width: 1200,
 			height: 700,
 			transition: 'convex'
+		});
+
+		Reveal.on('slidechanged', function(event) {
+			var logo = document.querySelector('#tl-logo');
+
+			if(event.currentSlide.classList.contains('full-screen-slide')){
+				logo.classList.add('hide-logo');
+			}
+			else {
+				logo.classList.remove('hide-logo');
+			}
 		});
 	</script>
 </body>
