@@ -30,6 +30,7 @@ namespace ExtendingForms.Web.DefaultBehaviors
                 Id = Guid.NewGuid()
             };
             page.FieldSets.Add(fieldSet);
+
             FieldsetContainer container = new FieldsetContainer()
             {
                 Width = 12
