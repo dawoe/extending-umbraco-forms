@@ -17,7 +17,7 @@
     "web": "https://hakim.se"
   },
   "repository": {
-    "type": "git",
+    "type": "git"
   },
   "engines": {
     "node": ">=18.0.0"

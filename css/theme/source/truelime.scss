@@ -1,0 +1,101 @@
+/**
+ * White theme for reveal.js. This is the opposite of the 'black' theme.
+ *
+ * By Hakim El Hattab, http://hakim.se
+ */
+
+
+// Default mixins and settings -----------------
+@import "../template/mixins";
+@import "../template/settings";
+// ---------------------------------------------
+
+
+// Include theme-specific fonts
+@font-face {
+    font-family: 'Poppins';
+    src: url("/dist/theme/fonts/poppins/poppins-light-webfont.woff") format('woff'),url("/dist/theme/fonts/poppins/poppins-light-webfont.woff2") format('woff2');
+    font-weight: 300;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Poppins';
+    src: url("/dist/theme/fonts/poppins/poppins-regular-webfont.woff") format('woff'),url("/dist/theme/fonts/poppins/poppins-regular-webfont.woff2") format('woff2');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Poppins';
+    src: url("/dist/theme/fonts/poppins/poppins-medium-webfont.woff") format('woff'),url("/dist/theme/fonts/poppins/poppins-medium-webfont.woff2") format('woff2');
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Poppins';
+    src: url("/dist/theme/fonts/poppins/poppins-semibold-webfont.woff") format('woff'),url("/dist/theme/fonts/poppins/poppins-semibold-webfont.woff2") format('woff2');
+    font-weight: 600;
+    font-style: normal;
+    font-display: swap;
+}
+
+$tl-purple:rgb(136,0,78);
+$tl-orange:#e33f00;
+$tl-pink:#db0967;
+$tl-green: #8bb20d;
+
+// Override theme settings (see ../template/settings.scss)
+$backgroundColor: #fff;
+
+$mainColor: rgb(39,39,39);
+$headingColor: $tl-green;
+
+$mainFontSize: 42px;
+$mainFont: 'Poppins', Helvetica, sans-serif;
+$headingFont: 'Poppins', Helvetica, sans-serif;
+$headingTextShadow: none;
+$headingLetterSpacing: normal;
+$headingTextTransform: uppercase;
+$headingFontWeight: 600;
+$linkColor:  rgb(227,63,24);
+$linkColorHover: rgb(227,63,24);
+$selectionBackgroundColor: lighten( $linkColor, 25% );
+
+$heading1Size: 2.5em;
+$heading2Size: 1.6em;
+$heading3Size: 1.3em;
+$heading4Size: 1.0em;
+
+$overlayElementBgColor: 0, 0, 0;
+$overlayElementFgColor: 240, 240, 240;
+
+
+
+// Change text colors against dark slide backgrounds
+@include dark-bg-text-color(#fff);
+
+
+// Theme template ------------------------------
+@import "../template/theme";
+// ---------------------------------------------
+
+#tl-logo {
+    position: absolute;
+    bottom: 2%;
+    left: 2%;
+    z-index: 10000; 
+    background-color: white;
+}
+
+.purple-slide {    
+    color:white;
+
+    h1, h2 {
+        color:white
+    }
+}
