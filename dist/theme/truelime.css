@@ -392,9 +392,9 @@ section.has-dark-background, section.has-dark-background h1, section.has-dark-ba
   background-color: white;
 }
 
-.purple-slide {
+.full-screen-slide {
   color: white;
 }
-.purple-slide h1, .purple-slide h2 {
+.full-screen-slide h1, .full-screen-slide h2 {
   color: white;
 }
