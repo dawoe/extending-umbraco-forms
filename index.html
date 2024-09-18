@@ -527,6 +527,198 @@ public class AddCustomFieldsComposer : IComposer
 				<h2>Custom workflow type</h2>
 				<p>Workflows can be attached to different form record states (submitted, approved and rejected).</p>
 			</section>
+
+			<section data-auto-animate>
+				<h2>Custom workflow type</h2>
+				<p>Failed workflows will still show thank you page.</p>
+			</section>
+
+			<section data-auto-animate>
+				<h2>Custom workflow type</h2>
+				<p>"Thank you page" can be overruled from workflow</p>
+			</section>
+
+			<section data-auto-animate>
+				<h2>Custom workflow type</h2>
+				<pre>
+					<code  data-line-numbers="1-2|7-18|20-21|23-33|37-48|50-53|55-58" data-trim data-noescape class="language-csharp">
+						<script type="text/template">
+							public class DutchIbanWorkFlowType : WorkflowType
+							{
+								private readonly IUmbracoContextAccessor _umbracoContextAccessor;
+								private readonly IHttpContextAccessor _httpContextAccessor;
+								private readonly ITempDataDictionaryFactory _tempDataDictionaryFactory;
+							
+								public DutchIbanWorkFlowType(IUmbracoContextAccessor umbracoContextAccessor, IHttpContextAccessor httpContextAccessor, ITempDataDictionaryFactory tempDataDictionaryFactory)
+								{
+									_umbracoContextAccessor = umbracoContextAccessor;
+									_httpContextAccessor = httpContextAccessor;
+									_tempDataDictionaryFactory = tempDataDictionaryFactory;
+							
+									this.Id = new Guid("30008022-e05e-4b05-9348-733498bedbc8");
+									this.Name = "Dutch IBAN Processor";
+									this.Description = "Demo work flow for processing form data";
+									this.Icon = "icon-piggy-bank";
+									this.Group = "Services";
+								}
+							
+								[Umbraco.Forms.Core.Attributes.Setting("Error page", View = "Pickers.ContentWithXPath", IsMandatory = true)]
+								public string ErrorPage { get; set; }
+							
+								public override Task<WorkflowExecutionStatus> ExecuteAsync(WorkflowExecutionContext context)
+								{
+									// we are assuming something went wrong in processing here.
+									if (_httpContextAccessor.HttpContext is null)
+									{
+										return Task.FromResult(WorkflowExecutionStatus.Failed);
+									}
+							
+									// save error in temp data
+									var tempData = _tempDataDictionaryFactory.GetTempData(_httpContextAccessor.HttpContext);
+									tempData.Add("FormError", "I am not able to process your IBAN");
+							
+							
+									// set custom error page url here
+									if (_umbracoContextAccessor.TryGetUmbracoContext(out var umbracoContext))
+									{
+										if (umbracoContext.Content is not null)
+										{
+											var content = umbracoContext.Content.GetById(int.Parse(this.ErrorPage));
+							
+											if (content != null)
+											{
+												_httpContextAccessor.HttpContext.Items[Constants.ItemKeys.RedirectAfterFormSubmitUrl] = content.Url();
+											}
+										}
+									}
+							
+									context.Record.State = FormState.Rejected;
+									
+									return Task.FromResult(WorkflowExecutionStatus.Failed);
+								}
+							
+								public override List<Exception> ValidateSettings()
+								{
+									return new List<Exception>();
+								}
+						</script>
+					</code>
+				</pre>			
+			</section>
+
+			<section data-auto-animate>
+				<h2>Custom workflow type</h2>
+				<pre>
+					<code  data-line-numbers="" data-trim data-noescape class="language-csharp">
+						<script type="text/template">
+							public class AddCustomWorkFlows : IComposer
+							{
+								public void Compose(IUmbracoBuilder builder)
+								{
+									builder.FormsWorkflows().Add<DutchIbanWorkFlowType>();
+								}
+							}
+						</script>
+					</code>
+				</pre>			
+			</section>
+
+			<section data-background-video="video/workflow-error.mp4" data-background-size="contain" class="full-screen-slide"></section>
+
+			<section data-auto-animate>
+				<h2>Prevalue sources</h2>
+				<p>Prevalue sources are way to retrieve a list of items from a certain source. </p>
+			</section>
+
+			<section data-auto-animate>
+				<h2>Prevalue sources</h2>
+				<p>For example a list of departments managed in the content tree</p>
+				<img src="img/department-content.png" class="r-stretch"/>
+			</section>
+
+			<section data-auto-animate>
+				<h2>Prevalue sources</h2>
+				<pre>
+					<code  data-line-numbers="1-2|5-12|14-29|31-41" data-trim data-noescape class="language-csharp">
+						<script type="text/template">
+public class DepartmentsPrevalueSource : FieldPreValueSourceType
+{
+    private readonly IUmbracoContextAccessor _umbracoContextAccessor;
+
+    public DepartmentsPrevalueSource(IUmbracoContextAccessor umbracoContextAccessor)
+    {
+        Id = new Guid("42C8158D-2AA8-4621-B653-6A63C7545768");
+        Name = "Departments";
+        Description = "List of departments managed in the data folder in the content section";
+
+        _umbracoContextAccessor = umbracoContextAccessor;
+    }
+
+    public override List<PreValue> GetPreValues(Field? field, Form? form)
+    {
+        var preValues = new List<PreValue>();
+
+        if (_umbracoContextAccessor.TryGetUmbracoContext(out var umbracoContext) == false)
+        {
+            return preValues;
+        }
+
+        if (umbracoContext.Content is null)
+        {
+            return preValues;
+        }
+
+        var departments = umbracoContext.Content.GetAtRoot().FirstOrDefault()?.Descendants<Department>().ToList() ??
+                         new List<Department>();
+
+        foreach (var department in departments)
+        {
+            preValues.Add(new PreValue
+            {
+                Id = department.Id.ToString(),
+                Value = department.Id.ToString(),
+                Caption = department.Name,
+            });
+        }
+
+        return preValues;
+    }
+
+    public override List<Exception> ValidateSettings()
+    {
+        var exceptions = new List<Exception>();
+        return exceptions;
+    }
+						</script>
+					</code>
+				</pre>			
+			</section>
+
+			<section data-auto-animate>
+				<h2>Prevalue sources</h2>
+				<pre>
+					<code  data-line-numbers="" data-trim data-noescape class="language-csharp">
+						<script type="text/template">
+public class AddPrevalueSourceComposer : IComposer
+{
+    public void Compose(IUmbracoBuilder builder)
+    {
+        builder.FormsFieldPreValueSources().Add<DepartmentsPrevalueSource>();
+    }
+}
+						</script>
+					</code>
+				</pre>			
+			</section>
+
+			<section data-background-video="video/prevalue-departments.mp4" data-background-size="contain" class="full-screen-slide"></section>
+
+			<section data-auto-animate>
+				<h2>Prevalue sources</h2>
+				<p>Once a prevalue source has been created it can be used in list based field types, for example a dropdown.</p>
+			</section>
+
+			<section data-background-video="video/add-departments-to-forms.mp4" data-background-size="contain" class="full-screen-slide"></section>
 	</div>
 
 	<div id="tl-logo" class="hide-logo">
