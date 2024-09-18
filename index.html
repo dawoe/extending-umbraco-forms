@@ -54,17 +54,19 @@
 			</section>
 
 			<section class="full-screen-slide" data-background-color="#e33f00">
-				<h1 class="r-fit-text">Configure<br> default behavior</h1>
+				<h1 class="r-fit-text">Changing<br> default behavior</h1>
 			</section>
 
 			<section data-auto-animate>
-				<h2>Form settings</h2>
-				<p>Configure default values for design and behavoir <a href="https://docs.umbraco.com/umbraco-forms/v/13.forms.latest-lts/developer/configuration#form-design-configuration"> settings</a></p>
-				
+				<h2>Form design</h2>
+				<p>Configure default values for design and behavoir <a
+						href="https://docs.umbraco.com/umbraco-forms/v/13.forms.latest-lts/developer/configuration#form-design-configuration">
+						settings</a></p>
+
 			</section>
 
 			<section data-auto-animate>
-				<h2>Form settings</h2>
+				<h2>Form design</h2>
 				<pre>
 					<code data-trim data-noescape class="language-json">
 						"Umbraco": {
@@ -82,6 +84,48 @@
 										"DaysToRetainSubmittedRecordsFor": 90
 									}									
 								}								
+							}
+						}
+					</code>
+				</pre>
+			</section>
+
+			<section data-auto-animate data-auto-animate-restart>
+				<h2>Settings customization</h2>
+				<p>Customize <a
+						href="https://docs.umbraco.com/umbraco-forms/v/13.forms.latest-lts/developer/configuration#settingscustomization">settings</a>
+					for <a
+						href="https://docs.umbraco.com/umbraco-forms/v/13.forms.latest-lts/developer/configuration/type-details">provider
+						types</a>
+					<br /> (fields, workflows,..)
+				</p>
+			</section>
+
+			<section data-auto-animate>
+				<h2>Settings customization</h2>
+				<p>Provide a default value</p>
+				<p class="fragment">Read only mode</p>
+				<p class="fragment">Hide the setting</p>
+			</section>
+
+			<section data-auto-animate>
+				<h2>Settings customization</h2>
+				<pre>
+					<code data-trim data-noescape class="language-json">
+						"Umbraco": {
+							"Forms": {
+								"FormDesign": {									
+									"SettingsCustomization": {
+										"FieldTypes": {
+											"shortAnswer": {
+												"AutocompleteAttribute": {
+													"IsHidden": true,
+													"DefaultValue": "off"
+												}
+											}
+										}
+									}
+								}
 							}
 						}
 					</code>
@@ -117,10 +161,10 @@
 			transition: 'convex'
 		});
 
-		Reveal.on('slidechanged', function(event) {
+		Reveal.on('slidechanged', function (event) {
 			var logo = document.querySelector('#tl-logo');
 
-			if(event.currentSlide.classList.contains('full-screen-slide')){
+			if (event.currentSlide.classList.contains('full-screen-slide')) {
 				logo.classList.add('hide-logo');
 			}
 			else {
