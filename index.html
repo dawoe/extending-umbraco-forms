@@ -59,7 +59,7 @@
 
 			<section data-auto-animate>
 				<h2>Form design</h2>
-				<p>Configure default values for design and behavoir <a
+				<p>Configure default values for design and behavior <a
 						href="https://docs.umbraco.com/umbraco-forms/v/13.forms.latest-lts/developer/configuration#form-design-configuration">
 						settings</a></p>
 
@@ -719,6 +719,125 @@ public class AddPrevalueSourceComposer : IComposer
 			</section>
 
 			<section data-background-video="video/add-departments-to-forms.mp4" data-background-size="contain" class="full-screen-slide"></section>
+
+			<section class="full-screen-slide" data-background-color="rgb(136,0,78)">
+				<h1 class="r-fit-text">Question ?</h1>
+				<h2 class="r-fit-text">How would you handle sending a e-mail to the selected department</h2>
+			</section>
+
+			<section data-auto-animate>
+				<h2>Magic strings</h2>
+				<p><a href="https://docs.umbraco.com/umbraco-forms/v/13.forms.latest-lts/developer/magic-strings">Magic strings</a> enable you to render values from various sources, such as request, dictionary items, session & cookies or page fields</p>
+			</section>
+
+			<section data-auto-animate>
+				<h2>Magic strings</h2>
+				<p>In a workflow they can used to read record values using the syntax {fieldAlias}</p>
+			</section>
+
+			<section data-auto-animate>
+				<h2>Magic strings</h2>
+				<p><a href="https://docs.umbraco.com/umbraco-forms/v/13.forms.latest-lts/developer/magic-strings#formatting-magic-strings">Formatting functions</a> can be applied to magic strings. For example {fieldAlias | truncate: 10}</p>
+			</section>
+
+			<section data-auto-animate>
+				<h2>Magic strings</h2>
+				<p>Custom formatting functions can be created by adding a class implementing the <a href="https://docs.umbraco.com/umbraco-forms/v/13.forms.latest-lts/developer/extending/adding-a-magic-string-format-function">IParsedPlaceholderFormatter</a> interface</p>
+			</section>
+
+			<section data-auto-animate>
+				<h2>Magic strings</h2>
+				<pre>
+					<code  data-line-numbers="1-2|7|9-19|21-31|33-45|47-52" data-trim data-noescape class="language-csharp">
+						<script type="text/template">
+							public class PropertyValueParsedPlaceholderFormatter : IParsedPlaceholderFormatter
+							{
+								private readonly IUmbracoContextAccessor contextAccessor;
+						   
+								public PropertyValueParsedPlaceholderFormatter(IUmbracoContextAccessor contextAccessor) => this.contextAccessor = contextAccessor;
+						   
+								public string FunctionName => "propertyValue";
+						   
+								public string FormatValue(string value, string[] args)
+								{
+									if (string.IsNullOrWhiteSpace(value))
+									{
+										return value;
+									}
+						   
+									if (args.Length != 1)
+									{
+										return value;
+									}
+						   
+									var propertyAlias = args.First();
+						   
+									if (string.IsNullOrWhiteSpace(propertyAlias))
+									{
+										return value;
+									}
+						   
+									if (int.TryParse(value, out var contentId) == false)
+									{
+										return value;
+									}
+						   
+									var umbracoContext = this.contextAccessor.GetRequiredUmbracoContext();
+						   
+									if (umbracoContext.Content is null)
+									{
+										return value;
+									}
+						   
+									var content = umbracoContext.Content.GetById(contentId);
+						   
+									if (content is null)
+									{
+										return value;
+									}
+						   
+									if (content.HasProperty(propertyAlias) == false)
+									{
+										return value;
+									}
+						   
+									return content.Value<string>(propertyAlias) ?? value;
+								}
+							}
+						</script>
+					</code>
+				</pre>			
+			</section>
+
+			<section data-auto-animate>
+			<h2>Magic strings</h2>
+				<pre>
+					<code  data-line-numbers="" data-trim data-noescape class="language-csharp">
+						<script type="text/template">
+							public class AddParsedPlaceholderFormattersComposer : IComposer
+							{
+								public void Compose(IUmbracoBuilder builder)
+								{
+									builder.FormsParsedPlaceholderFormatters().Add<PropertyValueParsedPlaceholderFormatter>();
+								}
+							}
+						</script>
+					</code>
+				</pre>			
+			</section>
+
+			<section data-auto-animate>
+				<h2>Magic strings</h2>
+				<p>We used the magic string with our formatting function for the email receiver in the workflow</p>
+				<img class="r-stretch" src="img/magic-string-workflow.png"/>
+			</section>
+
+			<section data-background-video="video/contact-form.mp4" data-background-size="contain" class="full-screen-slide"></section>
+
+			<section class="full-screen-slide" data-background-color="#8bb20d">
+				<h1 class="r-fit-text">Thank you</h1>
+				<img class="r-stretch" src="img/qr.png">
+			</section>
 	</div>
 
 	<div id="tl-logo" class="hide-logo">
